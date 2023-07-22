@@ -1,20 +1,25 @@
 package task1;
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
 /**
  * This program implements a socket client using Socket class
  *
- * @author Sandul Renuja
- * @version 1.0
+ * @author ByteBuggers
+ * @for SCS3203 - Middleware Architecture | Assignment 1 (Task 1)
+ * @version 1.1
  * @since 2023-07-16
  */
 
 public class MySocketClient {
     public static void main(String[] args) {
+        if (args.length != 2) {
+            System.out.println("Usage: java task1.MySocketClient <SERVER_IP> <SERVER_PORT>");
+            return;
+        }
+
         // get ip address and port number from command line arguments
         String ip = args[0];
         int port = Integer.parseInt(args[1]);
@@ -22,31 +27,30 @@ public class MySocketClient {
 
         System.out.println("Client started...");
 
-        // get input from user and send to server
-        while (true) {
-            System.out.print("Enter message: ");
-            String message = scanner.nextLine();
+        try {
+            // create a socket connection to server
+            Socket socket = new Socket(ip, port);
+            System.out.println("Connected to server: " + ip + ":" + port);
 
-            try {
-                // create a socket and object output stream
-                Socket socket = new Socket(ip, port);
+            BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
+            PrintWriter outputWriter = new PrintWriter(socket.getOutputStream(), true);
 
-                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+            String message;
 
-                // write to socket using ObjectOutputStream
-                oos.writeObject(message);
+            // get inputs from user and send to server until user enters "terminate"
+            while (true) {
+                message = inputReader.readLine();
+                outputWriter.println(message);
 
-                // close resources
-                oos.close();
-                socket.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                if (message.equalsIgnoreCase("terminate")) {
+                    break;
+                }
             }
 
-            // terminate the client if user sends terminate request
-            if (message.equalsIgnoreCase("terminate")) {
-                break;
-            }
+            System.out.println("Connection terminated.");
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         scanner.close();
