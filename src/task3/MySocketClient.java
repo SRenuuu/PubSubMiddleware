@@ -10,13 +10,19 @@ import java.util.Scanner;
 /**
  * This program implements a socket client using Socket class
  *
- * @author Sandul Renuja
- * @version 1.0
+ * @author ByteBuggers
+ * @for SCS3203 - Middleware Architecture | Assignment 1 (Task 3)
+ * @version 1.1
  * @since 2023-07-16
  */
 
 public class MySocketClient {
     public static void main(String[] args) throws IOException {
+        if (args.length != 2) {
+            System.out.println("Usage: java task3.MySocketClient <SERVER_IP> <SERVER_PORT>");
+            return;
+        }
+
         // get ip address, port number, client type and topic from command line arguments
         String ip = args[0];
         int port = Integer.parseInt(args[1]);

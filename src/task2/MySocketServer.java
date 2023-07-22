@@ -11,8 +11,9 @@ import java.util.ArrayList;
 /**
  * This program implements a socket server that can handle multiple clients concurrently
  *
- * @author Sandul Renuja
- * @version 1.0
+ * @author ByteBuggers
+ * @for SCS3203 - Middleware Architecture | Assignment 1 (Task 2)
+ * @version 1.1
  * @since 2023-07-16
  */
 
@@ -23,6 +24,11 @@ public class MySocketServer {
     private static final ArrayList<Socket> subscribers = new ArrayList<>();
 
     public static void main(String[] args) {
+        if (args.length != 1) {
+            System.out.println("Usage: java task2.MySocketServer <SERVER_PORT>");
+            return;
+        }
+
         // get port number from command line argument
         port = Integer.parseInt(args[0]);
 
@@ -52,12 +58,14 @@ public class MySocketServer {
                 switch (clientType) {
                     case "PUBLISHER" -> {
                         System.out.println("Publisher connected");
+
                         // create a new thread for the publisher
                         PublisherClientThread publisher = new PublisherClientThread(clientSocket);
                         publisher.start();
                     }
                     case "SUBSCRIBER" -> {
                         System.out.println("Subscriber connected");
+
                         // add subscriber to the list
                         subscribers.add(clientSocket);
                     }
@@ -88,7 +96,6 @@ public class MySocketServer {
 
                 while ((message = in.readLine()) != null) {
                     System.out.println(message);
-
 
                     // send message to all subscribers
                     for (Socket subscriber : subscribers) {

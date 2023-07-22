@@ -9,10 +9,12 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 /**
- * This program implements a socket server that can handle multiple clients concurrently
+ * This program implements a socket server that can handle multiple clients concurrently and filter messages
+ * based on topic / subject
  *
- * @author Sandul Renuja
- * @version 1.0
+ * @author ByteBuggers
+ * @for SCS3203 - Middleware Architecture | Assignment 1 (Task 3)
+ * @version 1.1
  * @since 2023-07-16
  */
 
@@ -23,6 +25,11 @@ public class MySocketServer {
     private static final ArrayList<Client> subscribers = new ArrayList<>();
 
     public static void main(String[] args) {
+        if (args.length != 1) {
+            System.out.println("Usage: java task3.MySocketServer <SERVER_PORT>");
+            return;
+        }
+
         // get port number from command line argument
         port = Integer.parseInt(args[0]);
 
